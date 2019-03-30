@@ -15,7 +15,7 @@ ValueNoise1D<Engine, T>::ValueNoise1D(Seed_Type seed) {
 }
 
 template <typename Engine, typename T>
-T ValueNoise1D<Engine, T>::eval(const T &x) {
+T ValueNoise1D<Engine, T>::eval(const T x) {
     assert(x >= 0); 
     // Integer floor function
     Conv_Type xMin = static_cast<Conv_Type>(x); 
