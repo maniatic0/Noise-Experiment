@@ -15,15 +15,18 @@ ValueNoise1D<Engine, T>::ValueNoise1D(Seed_Type seed) {
 }
 
 template <typename Engine, typename T>
-T ValueNoise1D<Engine, T>::eval(const T &x) { 
-    int xMin = (int)x; 
+T ValueNoise1D<Engine, T>::eval(const T &x) {
+    assert(x >= 0); 
+    // Integer floor function
+    Conv_Type xMin = static_cast<Conv_Type>(x); 
     assert(xMin <= kMaxVertices - 1); 
-    T t = x - xMin; 
+    T t = x - static_cast<T>(xMin); 
 
     return utils::lerp(r[xMin], r[xMin + 1], t); 
 } 
 
 } // namespace noise
+
 #include <iostream>
 
 int main()
