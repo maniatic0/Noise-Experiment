@@ -7,8 +7,8 @@
 namespace noise {
 
 template <typename Engine, typename T>
-ValueNoise1D<Engine, T>::ValueNoise1D(unsigned seed) {
-    //srand48(seed); 
+ValueNoise1D<Engine, T>::ValueNoise1D(Seed_Type seed) {
+    generator.seed(seed);
     for (unsigned i = 0; i < kMaxVertices; ++i) { 
         r[i] = distribution(generator); 
     } 
