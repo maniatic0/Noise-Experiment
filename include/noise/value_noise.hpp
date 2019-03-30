@@ -5,6 +5,7 @@
 #include <random>
 #include <array>
 
+namespace noise {
 template <typename Engine = std::default_random_engine, typename T = float>
 class ValueNoise1D 
 { 
@@ -25,6 +26,8 @@ private:
 
     Dist distribution {ValueNoise1D::low, ValueNoise1D::high};
     Engine generator; 
-}; 
+};
+
+} // namespace noise 
 
 #endif // VALUE_NOISE_H
