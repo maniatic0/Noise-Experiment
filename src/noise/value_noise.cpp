@@ -31,6 +31,9 @@ T perlinRemap(const T a, const T b, const T t) {
 template <uint_least16_t Period, typename Engine, typename Result_Type, 
     RemapFunction<Result_Type> Remap_Func>
 ValueNoise1D<Period, Engine, Result_Type, Remap_Func>::ValueNoise1D(Seed_Type seed) {
+    Dist distribution {ValueNoise1D::low, ValueNoise1D::high};
+    Engine generator; 
+    
     generator.seed(seed);
     for (unsigned i = 0; i < kMaxVertices; ++i) { 
         r[i] = distribution(generator); 

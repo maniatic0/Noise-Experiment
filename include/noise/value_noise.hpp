@@ -50,8 +50,8 @@ private:
     static constexpr Result_Type high {1.0};
     std::array<Result_Type, kMaxVertices> r {0.0};
 
-    Dist distribution {ValueNoise1D::low, ValueNoise1D::high};
-    Engine generator; 
+    //Dist distribution {ValueNoise1D::low, ValueNoise1D::high};
+    //Engine generator; 
 };
 
 } // namespace noise 
