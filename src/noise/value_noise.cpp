@@ -40,9 +40,29 @@ ValueNoise1D<Period, Engine, Result_Type, Remap_Func>::ValueNoise1D(Seed_Type se
     } 
 }
 
+// Copy and Move auto generated members
+
 template <uint_least16_t Period, typename Engine, typename Result_Type, 
     RemapFunction<Result_Type> Remap_Func>
 ValueNoise1D<Period, Engine, Result_Type, Remap_Func>::~ValueNoise1D() = default;
+
+template <uint_least16_t Period, typename Engine, typename Result_Type, 
+    RemapFunction<Result_Type> Remap_Func>
+ValueNoise1D<Period, Engine, Result_Type, Remap_Func>::ValueNoise1D(const ValueNoise1D& other) = default;
+
+template <uint_least16_t Period, typename Engine, typename Result_Type, 
+    RemapFunction<Result_Type> Remap_Func>
+ValueNoise1D<Period, Engine, Result_Type, Remap_Func>&
+ValueNoise1D<Period, Engine, Result_Type, Remap_Func>::operator=(const ValueNoise1D& other) = default;
+
+template <uint_least16_t Period, typename Engine, typename Result_Type, 
+    RemapFunction<Result_Type> Remap_Func>
+ValueNoise1D<Period, Engine, Result_Type, Remap_Func>::ValueNoise1D(ValueNoise1D&& other) noexcept = default;
+
+template <uint_least16_t Period, typename Engine, typename Result_Type, 
+    RemapFunction<Result_Type> Remap_Func>
+ValueNoise1D<Period, Engine, Result_Type, Remap_Func>&
+ValueNoise1D<Period, Engine, Result_Type, Remap_Func>::operator=(ValueNoise1D&& other) noexcept = default;
 
 template <uint_least16_t Period, typename Engine, typename Result_Type, 
     RemapFunction<Result_Type> Remap_Func>
