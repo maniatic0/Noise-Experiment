@@ -39,7 +39,11 @@
         "xutility": "cpp",
         "iostream": "cpp",
         "array": "cpp",
-        "iterator": "cpp"
+        "iterator": "cpp",
+        "numeric": "cpp",
+        "cfloat": "cpp",
+        "climits": "cpp",
+        "cctype": "cpp"
     },
     "C_Cpp.default.configurationProvider": "vector-of-bool.cmake-tools"
 }
