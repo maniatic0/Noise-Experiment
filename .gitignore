@@ -34,3 +34,6 @@
 # Build Folder
 /Build
 /build
+
+# VS Code
+.vscode/ipch
