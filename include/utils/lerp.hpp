@@ -13,4 +13,4 @@ constexpr inline T lerp(const T &lo, const T &hi, const T &t)
 
 } // namespace utils
 
-#endif // LERP_UTILITY_H
+#endif // !LERP_UTILITY_H
