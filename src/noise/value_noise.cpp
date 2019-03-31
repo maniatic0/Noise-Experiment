@@ -33,7 +33,7 @@ template <uint_least16_t Period, typename Engine, typename Result_Type,
 ValueNoise1D<Period, Engine, Result_Type, Remap_Func>::ValueNoise1D(Seed_Type seed) {
     Dist distribution {ValueNoise1D::low, ValueNoise1D::high};
     Engine generator; 
-    
+
     generator.seed(seed);
     for (unsigned i = 0; i < kMaxVertices; ++i) { 
         r[i] = distribution(generator); 
@@ -74,5 +74,5 @@ int main()
         float x = (2 * (i / float(numSteps - 1)) - 1) * 10; 
         std::cout << "Noise at " << x << ": " << valueNoise1D.eval(x) << std::endl; 
     } 
-    
+    std::cout << "Noise size " << ": " << sizeof(valueNoise1D) << std::endl; 
 }
