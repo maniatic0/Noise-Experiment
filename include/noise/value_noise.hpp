@@ -51,6 +51,7 @@ class ValueNoise1D
   private:
     using Conv_Type = typename utils::int_least_fit_t<Seed_Type>;
 
+  protected:
     static_assert(Period > 1 && !(Period & (Period - 1)), "Period must be power of 2 different from 0");
     static constexpr auto kMaxVertices{Period};
     static constexpr auto kMaxVerticesMask{Period - 1};
