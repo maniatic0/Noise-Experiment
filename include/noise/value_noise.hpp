@@ -40,7 +40,7 @@ public:
  
 private:
 
-    using Conv_Type = typename utils::int_least_fit<Seed_Type>::type;
+    using Conv_Type = typename utils::int_least_fit_t<Seed_Type>;
 
     static constexpr unsigned kMaxVertices = {10}; 
     static constexpr Result_Type low = {0.0};
