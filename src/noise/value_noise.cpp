@@ -43,7 +43,7 @@ ValueNoise1D<Period, Engine, Result_Type, Remap_Func>::ValueNoise1D(Seed_Type se
 template <uint_least16_t Period, typename Engine, typename Result_Type, 
     RemapFunction<Result_Type> Remap_Func>
 Result_Type 
-    ValueNoise1D<Period, Engine, Result_Type, Remap_Func>::eval(const Result_Type x) {
+    ValueNoise1D<Period, Engine, Result_Type, Remap_Func>::eval(const Result_Type x) const {
     // Floor using Integer trunc function
     Conv_Type xi = static_cast<Conv_Type>(x) - (x < 0 && x != static_cast<Conv_Type>(x));
 

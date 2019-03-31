@@ -37,7 +37,7 @@ public:
     ValueNoise1D( Seed_Type seed = 2011 );
  
     // Evaluate the noise function at position x
-    Result_Type eval(const Result_Type x);
+    Result_Type eval(const Result_Type x) const;
  
 private:
 
