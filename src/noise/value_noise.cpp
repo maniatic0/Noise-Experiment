@@ -28,21 +28,27 @@ T perlinRemap(const T a, const T b, const T t) {
     return utils::lerp<T>(a, b, tRemapPerlin); 
 }
 
-template <typename Engine, typename Result_Type, RemapFunction<Result_Type> Remap_Func>
-ValueNoise1D<Engine, Result_Type, Remap_Func>::ValueNoise1D(Seed_Type seed) {
+template <uint_least16_t Period, typename Engine, typename Result_Type, 
+    RemapFunction<Result_Type> Remap_Func>
+ValueNoise1D<Period, Engine, Result_Type, Remap_Func>::ValueNoise1D(Seed_Type seed) {
     generator.seed(seed);
     for (unsigned i = 0; i < kMaxVertices; ++i) { 
         r[i] = distribution(generator); 
     } 
 }
 
-template <typename Engine, typename Result_Type, RemapFunction<Result_Type> Remap_Func>
-Result_Type ValueNoise1D<Engine, Result_Type, Remap_Func>::eval(const Result_Type x) {
-    // Integer trunc function
-    Conv_Type xi = static_cast<Conv_Type>(x);; 
-    Conv_Type xMin = xi % static_cast<Conv_Type>(kMaxVertices);
+template <uint_least16_t Period, typename Engine, typename Result_Type, 
+    RemapFunction<Result_Type> Remap_Func>
+Result_Type 
+    ValueNoise1D<Period, Engine, Result_Type, Remap_Func>::eval(const Result_Type x) {
+    // Floor using Integer trunc function
+    Conv_Type xi = static_cast<Conv_Type>(x) - (x < 0 && x != static_cast<Conv_Type>(x));
+
     Result_Type t = x - static_cast<Result_Type>(xi); 
-    Conv_Type xMax = (xMin == static_cast<Conv_Type>(kMaxVertices) - 1) ? 0 : xMin + 1; 
+
+    // Modulo using the fact that kMaxVerticesMask is a power of 2
+    Conv_Type xMin = xi & static_cast<Conv_Type>(kMaxVerticesMask);
+    Conv_Type xMax = (xMin + 1) & static_cast<Conv_Type>(kMaxVerticesMask); 
 
 
     assert(xMin <= kMaxVertices - 1); 
@@ -57,11 +63,13 @@ Result_Type ValueNoise1D<Engine, Result_Type, Remap_Func>::eval(const Result_Typ
 
 int main()
 { 
-    std::cout << noise::cosineRemap<float>(0,1,1)<< std::endl;
-    noise::ValueNoise1D noise;
-    for(size_t i = 85; i < 100; i++)
-    {
-        std::cout << noise.eval(0.5 + (float) i) << std::endl;
-    }
+    noise::ValueNoise1D valueNoise1D;
+    static const int numSteps = 256; 
+ 
+    for (int i = 0; i < numSteps; ++i) { 
+        // x varies from -10 to 10
+        float x = (2 * (i / float(numSteps - 1)) - 1) * 10; 
+        std::cout << "Noise at " << x << ": " << valueNoise1D.eval(x) << std::endl; 
+    } 
     
 }

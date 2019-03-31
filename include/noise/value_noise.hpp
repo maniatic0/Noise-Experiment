@@ -5,6 +5,7 @@
 #include <random>
 #include <array>
 #include <type_traits>
+#include <cstdint>
 
 #include "utils/int_fit.hpp"
 
@@ -22,7 +23,7 @@ T smoothstepRemap(const T, const T, const T);
 template<typename T>
 T perlinRemap(const T, const T, const T);
 
-template <typename Engine = std::default_random_engine, typename Result_Type = float, 
+template <uint_least16_t Period = 256,typename Engine = std::default_random_engine, typename Result_Type = float, 
 RemapFunction<Result_Type> Remap_Func = smoothstepRemap<Result_Type> >
 class ValueNoise1D 
 { 
@@ -42,9 +43,11 @@ private:
 
     using Conv_Type = typename utils::int_least_fit_t<Seed_Type>;
 
-    static constexpr unsigned kMaxVertices = {10}; 
-    static constexpr Result_Type low = {0.0};
-    static constexpr Result_Type high = {1.0};
+    static_assert(Period > 1 && !(Period & (Period - 1)), "Period must be power of 2 different from 0");
+    static constexpr auto kMaxVertices {Period};
+    static constexpr auto kMaxVerticesMask {Period - 1};  
+    static constexpr Result_Type low {0.0};
+    static constexpr Result_Type high {1.0};
     std::array<Result_Type, kMaxVertices> r {0.0};
 
     Dist distribution {ValueNoise1D::low, ValueNoise1D::high};
