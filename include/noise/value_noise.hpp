@@ -35,6 +35,7 @@ public:
     using Seed_Type = typename Dist::result_type; 
 
     ValueNoise1D( Seed_Type seed = 2011 );
+    ~ValueNoise1D();
  
     // Evaluate the noise function at position x
     Result_Type eval(const Result_Type x) const;
