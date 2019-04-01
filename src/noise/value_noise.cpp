@@ -1,6 +1,7 @@
 
 #include <cassert>
 #include <cmath>
+#include <functional> 
 
 #include "noise/value_noise.hpp"
 #include "utils/lerp.hpp"
@@ -39,7 +40,7 @@ ValueNoise1D<Period, Engine, Result_Type, Remap_Func>::ValueNoise1D(Seed_Type se
     Engine generator;
 
     generator.seed(seed);
-    for (unsigned i = 0; i < kMaxVertices; ++i)
+    for (auto i = 0; i < kMaxVertices; ++i)
     {
         r[i] = distribution(generator);
     }
@@ -92,6 +93,35 @@ ValueNoise1D<Period, Engine, Result_Type, Remap_Func>::eval(const Result_Type x)
     return (*Remap_Func)(r[xMin], r[xMax], t);
 }
 
+template <uint_least16_t Period, typename Engine, typename Result_Type,
+          RemapFunction<Result_Type> Remap_Func>
+ValueNoise2D<Period, Engine, Result_Type, Remap_Func>::ValueNoise2D(Seed_Type seed)
+{
+    Dist distribution{ValueNoise1D::low, ValueNoise1D::high};
+    Engine generator;
+
+    generator.seed(seed);
+    for (auto i = 0; i < kMaxVertices; ++i)
+    {
+        r[i] = distribution(generator);
+        permutationTable[i] = i; 
+    }
+
+    // shuffle values of the permutation table
+    std::uniform_int_distribution distrUInt {0, kMaxVerticesMask}; 
+    auto randUInt = std::bind(distrUInt, generator); 
+    for (auto k = 0; k < kMaxVertices; ++k) { 
+        auto i = randUInt(); 
+        std::swap(permutationTable[k], permutationTable[i]); 
+        permutationTable[k + kMaxVertices] = permutationTable[k]; 
+    } 
+}
+
+// Auto Generated destructor
+template <uint_least16_t Period, typename Engine, typename Result_Type,
+          RemapFunction<Result_Type> Remap_Func>
+ValueNoise2D<Period, Engine, Result_Type, Remap_Func>::~ValueNoise2D() = default;
+
 } // namespace noise
 
 #include <iostream>
@@ -107,6 +137,12 @@ int main()
         float x = (2 * (i / float(numSteps - 1)) - 1) * 10;
         std::cout << "Noise at " << x << ": " << valueNoise1D.eval(x) << std::endl;
     }
-    std::cout << "Noise size "
+
+    noise::ValueNoise2D valueNoise2D;
+
+    std::cout << "ValueNoise1D size "
               << ": " << sizeof(valueNoise1D) << std::endl;
+
+    std::cout << "ValueNoise1D size "
+              << ": " << sizeof(valueNoise2D) << std::endl;
 }
