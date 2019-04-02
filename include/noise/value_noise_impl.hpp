@@ -113,7 +113,7 @@ template <uint_least16_t Period, typename Engine, typename Result_Type,
           RemapFunction<Result_Type> Remap_Func>
 Result_Type ValueNoise2D<Period, Engine, Result_Type, Remap_Func>::eval(const Vec_Type &p) const
 {
-    using fast_int_trunc = utils::fast_int_trunc<Result_Type, Conv_Type>;
+    constexpr auto fast_int_trunc = utils::fast_int_trunc<Result_Type, Conv_Type>;
     const Conv_Type xi = fast_int_trunc(p.x); 
     const Conv_Type yi = fast_int_trunc(p.y); 
 
@@ -136,7 +136,7 @@ Result_Type ValueNoise2D<Period, Engine, Result_Type, Remap_Func>::eval(const Ve
     const Result_Type sy = (*Remap_Func)(ty); 
 
     // linearly interpolate values along the x axis
-    using lerp = utils::lerp<Result_Type>;
+    constexpr auto lerp = utils::lerp<Result_Type>;
     const Result_Type nx0 = lerp(c00, c10, sx); 
     const Result_Type nx1 = lerp(c01, c11, sx); 
 
