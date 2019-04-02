@@ -4,26 +4,39 @@
 
 #include <random>
 #include <array>
+#include <cassert>
 #include <type_traits>
 #include <cstdint>
+#include <cmath>
 
 #include "utils/int_fit.hpp"
+#include "utils/constants.hpp"
 #include "vec/vec2.hpp"
 
 namespace noise
 {
 
 template <typename T = float>
-using RemapFunction = T (*)(const T, const T, const T);
+using RemapFunction = T (*)(const T);
 
 template <typename T>
-T cosineRemap(const T, const T, const T);
+constexpr T cosineRemap(const T t)
+{
+    assert(t >= 0 && t <= 1);
+    return (1 - std::cos(t * utils::pi<T>)) * 0.5;
+}
 
 template <typename T>
-T smoothstepRemap(const T, const T, const T);
+constexpr T smoothstepRemap(const T t)
+{
+    return t * t * (3 - 2 * t);
+}
 
 template <typename T>
-T perlinRemap(const T, const T, const T);
+constexpr T perlinRemap(const T t)
+{
+    return t * t * t * (10 - 15 * t + 6 * t * t);
+}
 
 template <uint_least16_t Period = 256, typename Engine = std::default_random_engine, typename Result_Type = float,
           RemapFunction<Result_Type> Remap_Func = smoothstepRemap<Result_Type>>
@@ -72,6 +85,10 @@ class ValueNoise2D : public ValueNoise1D<Period, Engine, Result_Type, Remap_Func
 
     ValueNoise2D(Seed_Type seed = 2011);
     virtual ~ValueNoise2D();
+
+    using Vec_Type = typename vector::Vec2<Result_Type>;
+
+    Result_Type eval(const Vec_Type &p) const;
 
     protected:
 

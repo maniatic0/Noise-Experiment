@@ -1,36 +1,15 @@
 
 #include <cassert>
-#include <cmath>
-#include <functional> 
+#include <functional>
 
 #include "noise/value_noise.hpp"
 #include "utils/lerp.hpp"
-#include "utils/constants.hpp"
+#include "utils/int_fit.hpp"
+#include "vec/vec2.hpp"
+#include "utils/fast_convertion.hpp"
 
 namespace noise
 {
-
-template <typename T>
-T cosineRemap(const T a, const T b, const T t)
-{
-    assert(t >= 0 && t <= 1);
-    T tRemapCosine = (1 - std::cos(t * utils::pi<T>)) * 0.5;
-    return utils::lerp<T>(a, b, tRemapCosine);
-}
-
-template <typename T>
-T smoothstepRemap(const T a, const T b, const T t)
-{
-    T tRemapSmoothstep = t * t * (3 - 2 * t);
-    return utils::lerp<T>(a, b, tRemapSmoothstep);
-}
-
-template <typename T>
-T perlinRemap(const T a, const T b, const T t)
-{
-    T tRemapPerlin = t * t * t * (10 - 15 * t + 6 * t * t);
-    return utils::lerp<T>(a, b, tRemapPerlin);
-}
 
 template <uint_least16_t Period, typename Engine, typename Result_Type,
           RemapFunction<Result_Type> Remap_Func>
@@ -71,27 +50,29 @@ template <uint_least16_t Period, typename Engine, typename Result_Type,
 ValueNoise1D<Period, Engine, Result_Type, Remap_Func> &
 ValueNoise1D<Period, Engine, Result_Type, Remap_Func>::operator=(ValueNoise1D &&other) noexcept = default;
 
-
-
 template <uint_least16_t Period, typename Engine, typename Result_Type,
           RemapFunction<Result_Type> Remap_Func>
 Result_Type
 ValueNoise1D<Period, Engine, Result_Type, Remap_Func>::eval(const Result_Type x) const
 {
     // Floor using Integer trunc function
-    Conv_Type xi = static_cast<Conv_Type>(x) - (x < 0 && x != static_cast<Conv_Type>(x));
+    const Conv_Type xi = utils::fast_int_trunc<Result_Type, Conv_Type>(x);
 
-    Result_Type t = x - static_cast<Result_Type>(xi);
+    const Result_Type t = x - static_cast<Result_Type>(xi);
 
     // Modulo using the fact that kMaxVerticesMask is a power of 2
-    Conv_Type xMin = xi & static_cast<Conv_Type>(kMaxVerticesMask);
-    Conv_Type xMax = (xMin + 1) & static_cast<Conv_Type>(kMaxVerticesMask);
+    const Conv_Type xMin = xi & static_cast<Conv_Type>(kMaxVerticesMask);
+    const Conv_Type xMax = (xMin + 1) & static_cast<Conv_Type>(kMaxVerticesMask);
 
     assert(xMin <= kMaxVertices - 1);
     assert(xMax <= kMaxVertices - 1);
 
-    return (*Remap_Func)(r[xMin], r[xMax], t);
+    const Result_Type tx = (*Remap_Func)(t);
+
+    return utils::lerp<Result_Type>(r[xMin], r[xMax], tx);
 }
+
+// ValueNoise2D
 
 template <uint_least16_t Period, typename Engine, typename Result_Type,
           RemapFunction<Result_Type> Remap_Func>
@@ -104,23 +85,60 @@ ValueNoise2D<Period, Engine, Result_Type, Remap_Func>::ValueNoise2D(Seed_Type se
     for (auto i = 0; i < kMaxVertices; ++i)
     {
         r[i] = distribution(generator);
-        permutationTable[i] = i; 
+        permutationTable[i] = i;
     }
 
     // shuffle values of the permutation table
-    std::uniform_int_distribution distrUInt {0, kMaxVerticesMask}; 
-    auto randUInt = std::bind(distrUInt, generator); 
-    for (auto k = 0; k < kMaxVertices; ++k) { 
-        auto i = randUInt(); 
-        std::swap(permutationTable[k], permutationTable[i]); 
-        permutationTable[k + kMaxVertices] = permutationTable[k]; 
-    } 
+    std::uniform_int_distribution distrUInt{0, kMaxVerticesMask};
+    auto randUInt = std::bind(distrUInt, generator);
+    for (auto k = 0; k < kMaxVertices; ++k)
+    {
+        auto i = randUInt();
+        std::swap(permutationTable[k], permutationTable[i]);
+        permutationTable[k + kMaxVertices] = permutationTable[k];
+    }
 }
 
 // Auto Generated destructor
 template <uint_least16_t Period, typename Engine, typename Result_Type,
           RemapFunction<Result_Type> Remap_Func>
 ValueNoise2D<Period, Engine, Result_Type, Remap_Func>::~ValueNoise2D() = default;
+
+
+template <uint_least16_t Period, typename Engine, typename Result_Type,
+          RemapFunction<Result_Type> Remap_Func>
+Result_Type ValueNoise2D<Period, Engine, Result_Type, Remap_Func>::eval(const Vec_Type &p) const
+{
+    const Conv_Type xi = utils::fast_int_trunc<Result_Type, Conv_Type>(p.x); 
+    const Conv_Type yi = utils::fast_int_trunc<Result_Type, Conv_Type>(p.y); 
+
+    const Result_Type tx = p.x - static_cast<Result_Type>(xi); 
+    const Result_Type ty = p.y - static_cast<Result_Type>(yi); 
+
+    const Conv_Type rx0 = xi & kMaxVerticesMask; 
+    const Conv_Type rx1 = (rx0 + 1) & kMaxVerticesMask; 
+    const Conv_Type ry0 = yi & kMaxVerticesMask; 
+    const Conv_Type ry1 = (ry0 + 1) & kMaxVerticesMask; 
+
+    // random values at the corners of the cell using permutation table
+    const auto & c00 = r[permutationTable[permutationTable[rx0] + ry0]]; 
+    const auto & c10 = r[permutationTable[permutationTable[rx1] + ry0]]; 
+    const auto & c01 = r[permutationTable[permutationTable[rx0] + ry1]]; 
+    const auto & c11 = r[permutationTable[permutationTable[rx1] + ry1]]; 
+
+    // remapping of tx and ty using the Smoothstep function 
+    const Result_Type sx = (*Remap_Func)(tx); 
+    const Result_Type sy = (*Remap_Func)(ty); 
+
+    // linearly interpolate values along the x axis
+    using lerp = utils::lerp<Result_Type>;
+
+    const Result_Type nx0 = lerp(c00, c10, sx); 
+    const Result_Type nx1 = lerp(c01, c11, sx); 
+
+    // linearly interpolate the nx0/nx1 along they y axis
+    return lerp(nx0, nx1, sy); 
+}
 
 } // namespace noise
 
