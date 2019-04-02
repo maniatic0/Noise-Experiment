@@ -90,6 +90,14 @@ class ValueNoise2D : public ValueNoise1D<Period, Engine, Result_Type, Remap_Func
 
     Result_Type eval(const Vec_Type &p) const;
 
+    // Copy Constructor and Assignment
+    ValueNoise2D(const ValueNoise2D &other);
+    ValueNoise2D &operator=(const ValueNoise2D &other);
+
+    // Move Constructor and Assignment
+    ValueNoise2D(ValueNoise2D &&other) noexcept;
+    ValueNoise2D &operator=(ValueNoise2D &&other) noexcept;
+
     protected:
 
     using Conv_Type = typename ValueNoise1D::Conv_Type;

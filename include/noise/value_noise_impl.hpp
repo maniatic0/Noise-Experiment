@@ -34,26 +34,6 @@ template <uint_least16_t Period, typename Engine, typename Result_Type,
           RemapFunction<Result_Type> Remap_Func>
 ValueNoise1D<Period, Engine, Result_Type, Remap_Func>::~ValueNoise1D() = default;
 
-// Copy and Move auto generated members
-
-template <uint_least16_t Period, typename Engine, typename Result_Type,
-          RemapFunction<Result_Type> Remap_Func>
-ValueNoise1D<Period, Engine, Result_Type, Remap_Func>::ValueNoise1D(const ValueNoise1D &other) = default;
-
-template <uint_least16_t Period, typename Engine, typename Result_Type,
-          RemapFunction<Result_Type> Remap_Func>
-ValueNoise1D<Period, Engine, Result_Type, Remap_Func> &
-ValueNoise1D<Period, Engine, Result_Type, Remap_Func>::operator=(const ValueNoise1D &other) = default;
-
-template <uint_least16_t Period, typename Engine, typename Result_Type,
-          RemapFunction<Result_Type> Remap_Func>
-ValueNoise1D<Period, Engine, Result_Type, Remap_Func>::ValueNoise1D(ValueNoise1D &&other) noexcept = default;
-
-template <uint_least16_t Period, typename Engine, typename Result_Type,
-          RemapFunction<Result_Type> Remap_Func>
-ValueNoise1D<Period, Engine, Result_Type, Remap_Func> &
-ValueNoise1D<Period, Engine, Result_Type, Remap_Func>::operator=(ValueNoise1D &&other) noexcept = default;
-
 template <uint_least16_t Period, typename Engine, typename Result_Type,
           RemapFunction<Result_Type> Remap_Func>
 Result_Type
@@ -75,6 +55,26 @@ ValueNoise1D<Period, Engine, Result_Type, Remap_Func>::eval(const Result_Type x)
 
     return utils::lerp<Result_Type>(r[xMin], r[xMax], tx);
 }
+
+// Copy and Move auto generated members
+
+template <uint_least16_t Period, typename Engine, typename Result_Type,
+          RemapFunction<Result_Type> Remap_Func>
+ValueNoise1D<Period, Engine, Result_Type, Remap_Func>::ValueNoise1D(const ValueNoise1D &other) = default;
+
+template <uint_least16_t Period, typename Engine, typename Result_Type,
+          RemapFunction<Result_Type> Remap_Func>
+ValueNoise1D<Period, Engine, Result_Type, Remap_Func> &
+ValueNoise1D<Period, Engine, Result_Type, Remap_Func>::operator=(const ValueNoise1D &other) = default;
+
+template <uint_least16_t Period, typename Engine, typename Result_Type,
+          RemapFunction<Result_Type> Remap_Func>
+ValueNoise1D<Period, Engine, Result_Type, Remap_Func>::ValueNoise1D(ValueNoise1D &&other) noexcept = default;
+
+template <uint_least16_t Period, typename Engine, typename Result_Type,
+          RemapFunction<Result_Type> Remap_Func>
+ValueNoise1D<Period, Engine, Result_Type, Remap_Func> &
+ValueNoise1D<Period, Engine, Result_Type, Remap_Func>::operator=(ValueNoise1D &&other) noexcept = default;
 
 // ValueNoise2D
 
@@ -143,6 +143,26 @@ Result_Type ValueNoise2D<Period, Engine, Result_Type, Remap_Func>::eval(const Ve
     // linearly interpolate the nx0/nx1 along they y axis
     return lerp(nx0, nx1, sy); 
 }
+
+// Copy and Move auto generated members
+
+template <uint_least16_t Period, typename Engine, typename Result_Type,
+          RemapFunction<Result_Type> Remap_Func>
+ValueNoise2D<Period, Engine, Result_Type, Remap_Func>::ValueNoise2D(const ValueNoise2D &other) = default;
+
+template <uint_least16_t Period, typename Engine, typename Result_Type,
+          RemapFunction<Result_Type> Remap_Func>
+ValueNoise2D<Period, Engine, Result_Type, Remap_Func> &
+ValueNoise2D<Period, Engine, Result_Type, Remap_Func>::operator=(const ValueNoise2D &other) = default;
+
+template <uint_least16_t Period, typename Engine, typename Result_Type,
+          RemapFunction<Result_Type> Remap_Func>
+ValueNoise2D<Period, Engine, Result_Type, Remap_Func>::ValueNoise2D(ValueNoise2D &&other) noexcept = default;
+
+template <uint_least16_t Period, typename Engine, typename Result_Type,
+          RemapFunction<Result_Type> Remap_Func>
+ValueNoise2D<Period, Engine, Result_Type, Remap_Func> &
+ValueNoise2D<Period, Engine, Result_Type, Remap_Func>::operator=(ValueNoise2D &&other) noexcept = default;
 
 } // namespace noise
 
