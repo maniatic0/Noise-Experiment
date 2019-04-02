@@ -133,7 +133,6 @@ Result_Type ValueNoise2D<Period, Engine, Result_Type, Remap_Func>::eval(const Ve
 
     // linearly interpolate values along the x axis
     using lerp = utils::lerp<Result_Type>;
-
     const Result_Type nx0 = lerp(c00, c10, sx); 
     const Result_Type nx1 = lerp(c01, c11, sx); 
 
