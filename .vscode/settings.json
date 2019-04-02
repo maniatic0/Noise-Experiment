@@ -43,7 +43,8 @@
         "numeric": "cpp",
         "cfloat": "cpp",
         "climits": "cpp",
-        "cctype": "cpp"
+        "cctype": "cpp",
+        "functional": "cpp"
     },
     "C_Cpp.default.configurationProvider": "vector-of-bool.cmake-tools"
 }
