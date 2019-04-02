@@ -109,8 +109,9 @@ template <uint_least16_t Period, typename Engine, typename Result_Type,
           RemapFunction<Result_Type> Remap_Func>
 Result_Type ValueNoise2D<Period, Engine, Result_Type, Remap_Func>::eval(const Vec_Type &p) const
 {
-    const Conv_Type xi = utils::fast_int_trunc<Result_Type, Conv_Type>(p.x); 
-    const Conv_Type yi = utils::fast_int_trunc<Result_Type, Conv_Type>(p.y); 
+    using fast_int_trunc = utils::fast_int_trunc<Result_Type, Conv_Type>;
+    const Conv_Type xi = fast_int_trunc(p.x); 
+    const Conv_Type yi = fast_int_trunc(p.y); 
 
     const Result_Type tx = p.x - static_cast<Result_Type>(xi); 
     const Result_Type ty = p.y - static_cast<Result_Type>(yi); 
