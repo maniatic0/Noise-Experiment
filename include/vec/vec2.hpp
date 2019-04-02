@@ -1,6 +1,7 @@
 
 
 #ifndef VEC_2_H
+#define VEC_2_H
 
 namespace vector
 {
