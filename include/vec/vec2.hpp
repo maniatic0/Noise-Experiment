@@ -19,4 +19,6 @@ using Vec2f = Vec2<float>;
 
 } // namespace vector
 
+#include "vec/vec2_impl.hpp"
+
 #endif // !VEC_2_H

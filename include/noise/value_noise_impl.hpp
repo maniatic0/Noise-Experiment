@@ -1,8 +1,12 @@
 
+#ifndef VALUE_NOISE_IMPL_H
+#define VALUE_NOISE_IMPL_H
+
+#include "noise/value_noise.hpp"
+
 #include <cassert>
 #include <functional>
 
-#include "noise/value_noise.hpp"
 #include "utils/lerp.hpp"
 #include "utils/int_fit.hpp"
 #include "vec/vec2.hpp"
@@ -142,25 +146,4 @@ Result_Type ValueNoise2D<Period, Engine, Result_Type, Remap_Func>::eval(const Ve
 
 } // namespace noise
 
-#include <iostream>
-
-int main()
-{
-    noise::ValueNoise1D valueNoise1D;
-    static const int numSteps = 256;
-
-    for (int i = 0; i < numSteps; ++i)
-    {
-        // x varies from -10 to 10
-        float x = (2 * (i / float(numSteps - 1)) - 1) * 10;
-        std::cout << "Noise at " << x << ": " << valueNoise1D.eval(x) << std::endl;
-    }
-
-    noise::ValueNoise2D valueNoise2D;
-
-    std::cout << "ValueNoise1D size "
-              << ": " << sizeof(valueNoise1D) << std::endl;
-
-    std::cout << "ValueNoise1D size "
-              << ": " << sizeof(valueNoise2D) << std::endl;
-}
+#endif // !VALUE_NOISE_IMPL_H

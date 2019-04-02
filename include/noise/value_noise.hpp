@@ -103,4 +103,6 @@ class ValueNoise2D : public ValueNoise1D<Period, Engine, Result_Type, Remap_Func
 
 } // namespace noise
 
+#include "noise/value_noise_impl.hpp"
+
 #endif // !VALUE_NOISE_H
