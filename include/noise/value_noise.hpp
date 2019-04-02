@@ -54,11 +54,11 @@ class ValueNoise1D
     // Evaluate the noise function at position x
     Result_Type eval(const Result_Type x) const;
 
-    // Copy Constructor and Copy Assigment
+    // Copy Constructor and Assignment
     ValueNoise1D(const ValueNoise1D &other);
     ValueNoise1D &operator=(const ValueNoise1D &other);
 
-    // Move Constructor and Copy Assigment
+    // Move Constructor and Assignment
     ValueNoise1D(ValueNoise1D &&other) noexcept;
     ValueNoise1D &operator=(ValueNoise1D &&other) noexcept;
 
