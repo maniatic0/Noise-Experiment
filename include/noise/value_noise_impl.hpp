@@ -111,7 +111,7 @@ ValueNoiseND<Dimension, Period, Engine, Result_Type, Remap_Func>::~ValueNoiseND(
 
 template <uint_least8_t Dimension, uint_least16_t Period, typename Engine, typename Result_Type,
           RemapFunction<Result_Type> Remap_Func>
-Result_Type ValueNoiseND<Dimension, Period, Engine, Result_Type, Remap_Func>::eval(const Vec_Type &p) const
+Result_Type ValueNoiseND<Dimension, Period, Engine, Result_Type, Remap_Func>::eval(const Vec2_Type &p) const
 {
     constexpr auto fast_int_trunc = utils::fast_int_trunc<Result_Type, Conv_Type>;
     const Conv_Type xi = fast_int_trunc(p.x); 

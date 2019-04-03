@@ -85,9 +85,9 @@ public:
   ValueNoiseND(Seed_Type seed = 2011);
   virtual ~ValueNoiseND();
 
-  using Vec_Type = typename vector::Vec2<Result_Type>;
+  using Vec2_Type = typename vector::Vec2<Result_Type>;
 
-  Result_Type eval(const Vec_Type &p) const;
+  Result_Type eval(const Vec2_Type &p) const;
 
   // Copy Constructor and Assignment
   ValueNoiseND(const ValueNoiseND &other);
