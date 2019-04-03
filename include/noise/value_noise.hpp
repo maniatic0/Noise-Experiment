@@ -93,8 +93,11 @@ public:
 
   Result_Type eval(const Vec2_Type &p) const;
 
+  // Implementation for 3D noise
   template <uint_least8_t T = Dimension>
   std::enable_if_t<3 <= T, Result_Type> eval(const Vec3_Type &p) const;
+
+  // TODO : create implementation for 4D and 5D Noise 
 
   // Copy Constructor and Assignment
   ValueNoiseND(const ValueNoiseND &other);
