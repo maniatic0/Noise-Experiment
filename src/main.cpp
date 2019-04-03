@@ -11,6 +11,7 @@
 int main()
 {
   noise::ValueNoise1D valueNoise1D;
+#if 0
   static const int numSteps = 256;
 
   for (int i = 0; i < numSteps; ++i)
@@ -19,6 +20,8 @@ int main()
     float x = (2 * (i / float(numSteps - 1)) - 1) * 10;
     std::cout << "Noise at " << x << ": " << valueNoise1D.eval(x) << std::endl;
   }
+
+#endif
 
   unsigned imageWidth = 512;
   unsigned imageHeight = 512;
@@ -37,6 +40,7 @@ int main()
         } 
     }
 #else
+#if 0
   // generate value noise
   noise::ValueNoise2D noise;
   float frequency = 0.05f;
@@ -48,6 +52,35 @@ int main()
       noiseMap[j * imageWidth + i] = noise.eval(vector::Vec2<float>(i, j) * frequency);
     }
   }
+#else
+  noise::ValueNoiseND<2, 512> noise;
+  unsigned numLayers = 5;
+  float maxNoiseVal = 0;
+  float frequency = 0.01f;
+  for (unsigned j = 0; j < imageHeight; ++j)
+  {
+    for (unsigned i = 0; i < imageWidth; ++i)
+    {
+      vector::Vec2f pNoise = vector::Vec2f(i, j) * frequency;
+      float amplitude = 1.0f / frequency;
+      noiseMap[j * imageWidth + i] = 0;
+      for (unsigned l = 0; l < numLayers; ++l)
+      {
+        noiseMap[j * imageWidth + i] += noise.eval(pNoise) * amplitude;
+        pNoise *= 2.0;
+        amplitude *= 0.5;
+      }
+      if (noiseMap[j * imageWidth + i] > maxNoiseVal)
+        maxNoiseVal = noiseMap[j * imageWidth + i];
+    }
+  }
+
+  for (size_t i = 0; i < imageWidth * imageHeight; i++)
+  {
+    noiseMap[i] /= maxNoiseVal;
+  }
+
+#endif
 #endif
 
   // output noise map to PPM
