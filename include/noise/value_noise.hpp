@@ -9,11 +9,10 @@
 #include <random>
 #include <type_traits>
 
-
 #include "utils/constants.hpp"
 #include "utils/int_fit.hpp"
 #include "vec/vec2.hpp"
-
+#include "vec/vec3.hpp"
 
 namespace noise {
 
@@ -77,6 +76,10 @@ template <uint_least8_t Dimension = 2, uint_least16_t Period = 256,
 class ValueNoiseND
     : public ValueNoise1D<Period, Engine, Result_Type, Remap_Func> {
 public:
+  static_assert(
+      2 <= Dimension && Dimension <= 5,
+      "Dimension must be between 2 and 5. For 1 Dimensions use ValueNoise1D");
+
   using ValueNoise1D = ValueNoise1D<Period, Engine, Result_Type, Remap_Func>;
 
   using Dist = typename ValueNoise1D::Dist;
@@ -86,8 +89,12 @@ public:
   virtual ~ValueNoiseND();
 
   using Vec2_Type = typename vector::Vec2<Result_Type>;
+  using Vec3_Type = typename vector::Vec3<Result_Type>;
 
   Result_Type eval(const Vec2_Type &p) const;
+
+  template <uint_least8_t T = Dimension>
+  std::enable_if_t<3 <= T, Result_Type> eval(const Vec3_Type &p) const;
 
   // Copy Constructor and Assignment
   ValueNoiseND(const ValueNoiseND &other);
@@ -104,13 +111,12 @@ protected:
   using ValueNoise1D::kMaxVerticesMask;
   using ValueNoise1D::r;
 
-  std::array<Result_Type, kMaxVertices * Dimension>
-      permutationTable{0.0};
+  std::array<Result_Type, kMaxVertices * Dimension> permutationTable{0.0};
 };
 
-using ValueNoise2D =
-    ValueNoiseND<2, 256, std::default_random_engine, float,
-                          smoothstepRemap<float>>;
+using ValueNoise2D = ValueNoiseND<2>;
+
+using ValueNoise3D = ValueNoiseND<3>;
 
 } // namespace noise
 
