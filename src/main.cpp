@@ -67,7 +67,7 @@ int main()
     std::cout << "ValueNoise1D size "
               << ": " << sizeof(valueNoise1D) << std::endl;
 
-    std::cout << "ValueNoise1D size "
+    std::cout << "ValueNoise2D size "
               << ": " << sizeof(valueNoise2D) << std::endl;
 
     return 0; 

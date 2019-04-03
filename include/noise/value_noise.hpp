@@ -73,7 +73,7 @@ class ValueNoise1D
     std::array<Result_Type, kMaxVertices> r{0.0};
 };
 
-template <uint_least16_t Period = 256, typename Engine = std::default_random_engine, typename Result_Type = float,
+template <uint_least8_t Dimension = 2, uint_least16_t Period = 256, typename Engine = std::default_random_engine, typename Result_Type = float,
           RemapFunction<Result_Type> Remap_Func = smoothstepRemap<Result_Type> >
 class ValueNoise2D : public ValueNoise1D<Period, Engine, Result_Type, Remap_Func> 
 {
@@ -106,7 +106,7 @@ class ValueNoise2D : public ValueNoise1D<Period, Engine, Result_Type, Remap_Func
     using ValueNoise1D::kMaxVerticesMask;
     using ValueNoise1D::r;
 
-    std::array<Result_Type, ValueNoise1D::kMaxVertices * 2> permutationTable {0.0};
+    std::array<Result_Type, ValueNoise1D::kMaxVertices * Dimension> permutationTable {0.0};
 };
 
 } // namespace noise
