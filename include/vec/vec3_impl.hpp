@@ -13,6 +13,13 @@ Vec3<T> Vec3<T>::operator*(const T &r) const
   return Vec3<T>(x * r, y * r, z * r);
 }
 
+template <typename T> Vec3<T>& Vec3<T>::operator*=(const T &r) {
+  x *= r;
+  y *= r;
+  z *= r;
+  return *this;
+}
+
 } // namespace vector
 
 #endif // !VEC_3_IMPL_H

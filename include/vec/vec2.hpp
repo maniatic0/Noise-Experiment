@@ -12,6 +12,7 @@ class Vec2
     Vec2() : x(T(0)), y(T(0)) {}
     Vec2(T xx, T yy) : x(xx), y(yy) {}
     Vec2 operator*(const T &r) const;
+    Vec2& operator*=(const T &r);
     T x, y;
 };
 

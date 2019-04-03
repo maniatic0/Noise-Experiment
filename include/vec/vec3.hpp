@@ -12,6 +12,7 @@ public:
   Vec3() : x(T(0)), y(T(0)), z(T(0)) {}
   Vec3(T xx, T yy, T zz) : x(xx), y(yy), z(zz) {}
   Vec3 operator*(const T &r) const;
+  Vec3& operator*=(const T &r);
   T x, y, z;
 };
 
