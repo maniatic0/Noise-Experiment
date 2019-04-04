@@ -2,6 +2,14 @@
 
 Summary from https://www.scratchapixel.com/lessons/procedural-generation-virtual-worlds/procedural-patterns-noise-part-1/simple-pattern-examples , just to remember it.
 
+## Permutation Table
+
+Note that in this implementation the array gradients has size  tableSize. This is not the case in Perlin implementation. It has size tableSize * 2. This is because in his original implementation the hash function he used was: 
+``return permutationTable[permutationTable[x] + y] + z``
+which return values between 0 and tableSize \* 2. Any lookup into permutation[] will return a value in the range 0 to tableSize and since we add z to it which is itself in the range 0 to tableSize then the resulting number is indeed in the range 0 to tableSize \* 2. Now since we use this number as an index in the array gradients, gradients needs to have a size of tableSize * 2. However in our implementation we use for the hash function: 
+``return permutationTable[permutationTable[permutationTable[x] + y] + z]`` 
+And this return a value in the range 0 to tableSize * 2 and thus our gradients array only requires to have the size tableSize. It's a detail but worth noting.
+
 ## Terminology
 
 The technique of **summing up layers** of noise which frequency and amplitude are related to each other, can be called a **fractal sum**.
@@ -33,3 +41,11 @@ A marble texture can created by modulating the phase of sine pattern with a nois
 ### Wood Texture
 
 Like the marble texture, the wood texture relies on a very simple trick. The idea is to multiply the noise function by a certain value greater than 1. Let's call the result of this multiplication g (historically it was called g in reference to wood grain). The texture is obtained by subtracting g from its integer part. Casting a positive float number to an integer will result in an integer necessarily smaller or equal to g. The result of that subtraction is therefore necessarily in the range [0:1) (1 exclusive). Figure 6 illustrates the process. In this example, we have multiplied the noise function by 4. The blue curve represents the value g, while the red curve represents the result of subtracting g from its integer part. Multiplying the noise function by a value greater than 4 would result in more breakups in the red curve. In 2D, these breakups mark the boundary between regions of lighter and darker color.
+
+## Perlin Noise
+
+**The Perlin noise** is very similar to the type of noise we studied in the previous lesson. Similarly to the value noise which we studied in the previous lesson, it relies on a lattice system. At the corner of lattice cells, we define some random values which are then interpolated to compute a noise value at the location of a point in space. Perlin Noise and Value Noise are **lattice based noise functions**.
+
+So if they work on the same principle what's the difference between the two? Well the difference is how we compute the "random values" at the corners of the lattice. In the case of the **value noise**, we simply assign random numbers at the corners of the lattice cells and interpolate these values using the position of the point within the cell that point falls into. This process is hopefully well explained in the previous lesson. In the **Perlin noise**, Ken Perlin suggests to replace the random values at the cell's corners with **gradient**. What he calls gradients are just random 3D normalized vectors (in the case of the 3D noise function). This is not very complicated to generate. Rather than generating random numbers within our Noise function constructor class, we just replace the random float generation by the generation of a random 3D vector. Creating a 3D random vector is easy: you just generate three random float in the range [0,1], remap these random numbers to the range [-1,1] and then normalize the resulting vector coordinates.
+
+Now there is a slight problem with this approach. Generating random normalized directions uniformly distributed is the same in a way than generating random positions on the unit sphere with a uniform distribution. Though the problem with the approach described above, is that it generates random normalized directions indeed but they are not uniformly distributed over the surface of a sphere which is a problem (because it will favour some of the directions more than others and this means in the end that our noise itself won't be uniform - and we don't want that). But let's ignore this point for now, we will correct this problem later.
