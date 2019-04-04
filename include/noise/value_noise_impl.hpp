@@ -106,10 +106,7 @@ ValueNoiseND<Dimension, Period, Engine, Result_Type, Remap_Func>::ValueNoiseND(
   {
     auto i = randUInt();
     std::swap(permutationTable[k], permutationTable[i]);
-    for (auto i = 1; i < Dimension; ++i)
-    {
-      permutationTable[k + (kMaxVertices * i)] = permutationTable[k];
-    }
+    permutationTable[k + kMaxVertices] = permutationTable[k];
   }
 }
 
