@@ -99,7 +99,7 @@ protected:
   using ValueNoise1D::kMaxVerticesMask;
   using ValueNoise1D::r;
 
-  std::array<Result_Type, kMaxVertices * 2> permutationTable{0.0};
+  std::array<Conv_Type, kMaxVertices * 2> permutationTable{0};
 };
 
 using ValueNoise2D = ValueNoiseND<2>;
