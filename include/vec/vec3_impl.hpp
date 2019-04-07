@@ -17,7 +17,7 @@ template <typename T> constexpr Vec3<T> &Vec3<T>::operator*=(const T &r) {
   return *this;
 }
 
-template <typename T = float>
+template <typename T>
 constexpr T dot(const Vec3<T> &a, const Vec3<T> &b) {
   return a.x * b.x + a.y * b.y + a.z * b.z;
 }
