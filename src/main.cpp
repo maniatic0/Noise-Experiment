@@ -4,13 +4,13 @@
 #include <iostream>
 #include <random>
 
+#include "noise/perlin_noise.hpp"
 #include "noise/value_noise.hpp"
 #include "vec/vec2.hpp"
 #include "vec/vec3.hpp"
 
-int main()
-{
-  noise::ValueNoise1D valueNoise1D;
+int main() {
+  noise::PerlinNoise noiseTest;
 #if 0
   static const int numSteps = 256;
 
@@ -18,7 +18,7 @@ int main()
   {
     // x varies from -10 to 10
     float x = (2 * (i / float(numSteps - 1)) - 1) * 10;
-    std::cout << "Noise at " << x << ": " << valueNoise1D.eval(x) << std::endl;
+    std::cout << "Noise at " << x << ": " << noiseTest.eval(x) << std::endl;
   }
 
 #endif
@@ -85,15 +85,12 @@ int main()
   float amplitudeMult = 0.35;
   unsigned numLayers = 5;
   float maxNoiseVal = 0;
-  for (unsigned j = 0; j < imageHeight; ++j)
-  {
-    for (unsigned i = 0; i < imageWidth; ++i)
-    {
+  for (unsigned j = 0; j < imageHeight; ++j) {
+    for (unsigned i = 0; i < imageWidth; ++i) {
       vector::Vec2f pNoise = vector::Vec2f(i, j) * frequency;
       float amplitude = 1;
       noiseMap[j * imageWidth + i] = 0;
-      for (unsigned l = 0; l < numLayers; ++l)
-      {
+      for (unsigned l = 0; l < numLayers; ++l) {
 //#define TURBULENCE
 #ifdef TURBULENCE
 #include <cmath>
@@ -122,16 +119,14 @@ int main()
 #elif defined(WOOD_TEXTURE)
 #include "utils/fast_convertion.hpp"
       constexpr int grain = 4; // Wood Grain
-      float g = noise.eval(vector::Vec2f(i, j) * frequency) * grain; 
+      float g = noise.eval(vector::Vec2f(i, j) * frequency) * grain;
       noiseMap[j * imageWidth + i] = g - static_cast<int>(g);
       maxNoiseVal = 1.0f;
 #else
-      if (noiseMap[j * imageWidth + i] > maxNoiseVal)
-      {
+      if (noiseMap[j * imageWidth + i] > maxNoiseVal) {
         maxNoiseVal = noiseMap[j * imageWidth + i];
       }
 #endif // MARBEL_TEXTURE
-
     }
   }
   for (unsigned i = 0; i < imageWidth * imageHeight; ++i)
@@ -144,10 +139,8 @@ int main()
   // output noise map to PPM
   std::ofstream ofs;
   ofs.open("./noise.ppm", std::ios::out | std::ios::binary);
-  ofs << "P6\n"
-      << imageWidth << " " << imageHeight << "\n255\n";
-  for (unsigned k = 0; k < imageWidth * imageHeight; ++k)
-  {
+  ofs << "P6\n" << imageWidth << " " << imageHeight << "\n255\n";
+  for (unsigned k = 0; k < imageWidth * imageHeight; ++k) {
     unsigned char n = static_cast<unsigned char>(noiseMap[k] * 255);
     ofs << n << n << n;
   }
@@ -155,8 +148,10 @@ int main()
 
   delete[] noiseMap;
 
+  noise::ValueNoise1D valueNoise1D;
   noise::ValueNoise2D valueNoise2D;
   noise::ValueNoise3D valueNoise3D;
+  noise::PerlinNoise perlinNoise3D;
 
   valueNoise3D.eval(vector::Vec3f(-1, 1, 0) * 0.5f);
 
@@ -168,6 +163,9 @@ int main()
 
   std::cout << "ValueNoise3D size "
             << ": " << sizeof(valueNoise3D) << std::endl;
+
+  std::cout << "PerlinNoise size "
+            << ": " << sizeof(perlinNoise3D) << std::endl;
 
   return 0;
 }
