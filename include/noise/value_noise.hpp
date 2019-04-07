@@ -4,32 +4,17 @@
 
 #include <array>
 #include <cassert>
-#include <cmath>
 #include <cstdint>
 #include <random>
 #include <type_traits>
 
-#include "utils/constants.hpp"
+#include "noise/noise_remap.hpp"
 #include "utils/int_fit.hpp"
 #include "vec/vec2.hpp"
 #include "vec/vec3.hpp"
 
+
 namespace noise {
-
-template <typename T = float> using RemapFunction = T (*)(const T);
-
-template <typename T> constexpr T cosineRemap(const T t) {
-  assert(t >= 0 && t <= 1);
-  return (1 - std::cos(t * utils::pi<T>)) * 0.5;
-}
-
-template <typename T> constexpr T smoothstepRemap(const T t) {
-  return t * t * (3 - 2 * t);
-}
-
-template <typename T> constexpr T perlinRemap(const T t) {
-  return t * t * t * (10 - 15 * t + 6 * t * t);
-}
 
 template <uint_least16_t Period = 256,
           typename Engine = std::default_random_engine,
@@ -97,7 +82,7 @@ public:
   template <uint_least8_t T = Dimension>
   std::enable_if_t<3 <= T, Result_Type> eval(const Vec3_Type &p) const;
 
-  // TODO : create implementation for 4D and 5D Noise 
+  // TODO : create implementation for 4D and 5D Noise
 
   // Copy Constructor and Assignment
   ValueNoiseND(const ValueNoiseND &other);
