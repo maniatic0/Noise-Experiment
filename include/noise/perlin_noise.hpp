@@ -9,15 +9,15 @@
 
 #include "noise/noise_remap.hpp"
 #include "utils/int_fit.hpp"
-#include "vec/vec3.hpp"
 #include "vec/vec2.hpp"
+#include "vec/vec3.hpp"
+
 
 namespace noise {
 
 template <uint_least16_t Period = 256,
           typename Engine = std::default_random_engine,
-          typename Result_Type = float,
-          RemapFunction<Result_Type> Remap_Func = perlinRemap<Result_Type>>
+          typename Result_Type = float>
 class PerlinNoise3D {
 public:
   static_assert(std::is_floating_point<Result_Type>(),
@@ -39,7 +39,6 @@ public:
   Result_Type eval(const Vec3_Type &p) const;
 
 private:
-
   using Conv_Type = typename utils::int_least_fit_t<Seed_Type>;
 
   static_assert(Period > 1 && !(Period & (Period - 1)),
@@ -51,7 +50,6 @@ private:
   std::array<Vec3_Type, kTableSize> gradients{};
   std::array<Conv_Type, kTableSize * 2> permutationTable{0};
 
-  
   inline Conv_Type hash(const Conv_Type x, const Conv_Type y,
                         const Conv_Type z) const {
     return permutationTable[permutationTable[permutationTable[x] + y] + z];
@@ -61,9 +59,7 @@ private:
     return permutationTable[permutationTable[x] + y];
   }
 
-  inline Conv_Type hash(const Conv_Type x) const {
-    return permutationTable[x];
-  }
+  inline Conv_Type hash(const Conv_Type x) const { return permutationTable[x]; }
 };
 
 using PerlinNoise = PerlinNoise3D<>;

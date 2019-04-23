@@ -7,17 +7,17 @@
 
 #include "noise/perlin_noise.hpp"
 
-#include "vec/vec3.hpp"
+#include "noise/noise_remap.hpp"
 #include "utils/constants.hpp"
 #include "utils/fast_convertion.hpp"
 #include "utils/lerp.hpp"
+#include "vec/vec3.hpp"
+
 
 namespace noise {
 
-template <uint_least16_t Period, typename Engine, typename Result_Type,
-          RemapFunction<Result_Type> Remap_Func>
-PerlinNoise3D<Period, Engine, Result_Type, Remap_Func>::PerlinNoise3D(
-    Seed_Type seed) {
+template <uint_least16_t Period, typename Engine, typename Result_Type>
+PerlinNoise3D<Period, Engine, Result_Type>::PerlinNoise3D(Seed_Type seed) {
   Dist distribution{low, high};
   Engine generator;
 
@@ -48,16 +48,12 @@ PerlinNoise3D<Period, Engine, Result_Type, Remap_Func>::PerlinNoise3D(
   }
 }
 
-template <uint_least16_t Period, typename Engine, typename Result_Type,
-          RemapFunction<Result_Type> Remap_Func>
-PerlinNoise3D<Period, Engine, Result_Type, Remap_Func>::~PerlinNoise3D() =
-    default;
+template <uint_least16_t Period, typename Engine, typename Result_Type>
+PerlinNoise3D<Period, Engine, Result_Type>::~PerlinNoise3D() = default;
 
-
-template <uint_least16_t Period, typename Engine, typename Result_Type,
-          RemapFunction<Result_Type> Remap_Func>
-Result_Type PerlinNoise3D<Period, Engine, Result_Type, Remap_Func>::eval(
-    const Result_Type x) const {
+template <uint_least16_t Period, typename Engine, typename Result_Type>
+Result_Type
+PerlinNoise3D<Period, Engine, Result_Type>::eval(const Result_Type x) const {
 
   constexpr auto fast_int_trunc = utils::fast_int_trunc<Result_Type, Conv_Type>;
 
@@ -69,7 +65,7 @@ Result_Type PerlinNoise3D<Period, Engine, Result_Type, Remap_Func>::eval(
 
   const Result_Type tx = x - static_cast<Result_Type>(posX);
 
-  const Result_Type u = (*Remap_Func)(tx);
+  const Result_Type u = perlinRemap<Result_Type>(tx);
 
   // gradients at the corner of the cell
   const Vec3_Type &c0 = gradients[hash(xi0)];
@@ -87,11 +83,9 @@ Result_Type PerlinNoise3D<Period, Engine, Result_Type, Remap_Func>::eval(
   return lerp(vector::dot(c0, p0), dot(c1, p1), u); // g
 }
 
-
-template <uint_least16_t Period, typename Engine, typename Result_Type,
-          RemapFunction<Result_Type> Remap_Func>
-Result_Type PerlinNoise3D<Period, Engine, Result_Type, Remap_Func>::eval(
-    const Vec2_Type &p) const {
+template <uint_least16_t Period, typename Engine, typename Result_Type>
+Result_Type
+PerlinNoise3D<Period, Engine, Result_Type>::eval(const Vec2_Type &p) const {
 
   constexpr auto fast_int_trunc = utils::fast_int_trunc<Result_Type, Conv_Type>;
 
@@ -107,8 +101,8 @@ Result_Type PerlinNoise3D<Period, Engine, Result_Type, Remap_Func>::eval(
   const Result_Type tx = p.x - static_cast<Result_Type>(posX);
   const Result_Type ty = p.y - static_cast<Result_Type>(posY);
 
-  const Result_Type u = (*Remap_Func)(tx);
-  const Result_Type v = (*Remap_Func)(ty);
+  const Result_Type u = perlinRemap<Result_Type>(tx);
+  const Result_Type v = perlinRemap<Result_Type>(ty);
 
   // gradients at the corner of the cell
   const Vec3_Type &c00 = gradients[hash(xi0, yi0)];
@@ -133,12 +127,9 @@ Result_Type PerlinNoise3D<Period, Engine, Result_Type, Remap_Func>::eval(
   return lerp(a, b, v); // g
 }
 
-
-
-template <uint_least16_t Period, typename Engine, typename Result_Type,
-          RemapFunction<Result_Type> Remap_Func>
-Result_Type PerlinNoise3D<Period, Engine, Result_Type, Remap_Func>::eval(
-    const Vec3_Type &p) const {
+template <uint_least16_t Period, typename Engine, typename Result_Type>
+Result_Type
+PerlinNoise3D<Period, Engine, Result_Type>::eval(const Vec3_Type &p) const {
 
   constexpr auto fast_int_trunc = utils::fast_int_trunc<Result_Type, Conv_Type>;
 
@@ -158,9 +149,9 @@ Result_Type PerlinNoise3D<Period, Engine, Result_Type, Remap_Func>::eval(
   const Result_Type ty = p.y - static_cast<Result_Type>(posY);
   const Result_Type tz = p.z - static_cast<Result_Type>(posZ);
 
-  const Result_Type u = (*Remap_Func)(tx);
-  const Result_Type v = (*Remap_Func)(ty);
-  const Result_Type w = (*Remap_Func)(tz);
+  const Result_Type u = perlinRemap<Result_Type>(tx);
+  const Result_Type v = perlinRemap<Result_Type>(ty);
+  const Result_Type w = perlinRemap<Result_Type>(tz);
 
   // gradients at the corner of the cell
   const Vec3_Type &c000 = gradients[hash(xi0, yi0, zi0)];
