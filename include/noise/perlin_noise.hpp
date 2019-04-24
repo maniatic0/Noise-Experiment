@@ -38,6 +38,9 @@ public:
 
   Result_Type eval(const Vec3_Type &p) const;
 
+  // Evaluation with Derivatives (they are returned through deriv)
+  Result_Type eval(const Vec3_Type &p, Vec3_Type &deriv) const;
+
 private:
   using Conv_Type = typename utils::int_least_fit_t<Seed_Type>;
 
